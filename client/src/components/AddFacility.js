@@ -11,7 +11,7 @@ function AddFacility({ fetchFacilities }) {
   const handleAddFacility = async () => {
 
     const response = await fetch(
-      'process.env.REACT_APP_API_URL/api/facilities',
+      `${process.env.REACT_APP_API_URL}/api/facilities`,
       {
         method: 'POST',
 
@@ -38,23 +38,9 @@ function AddFacility({ fetchFacilities }) {
 
   return (
 
-    <div
-      className="
-        bg-white
-        p-6
-        rounded-2xl
-        shadow-lg
-        mb-8
-      "
-    >
+    <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
 
-      <h2
-        className="
-          text-2xl
-          font-bold
-          mb-4
-        "
-      >
+      <h2 className="text-2xl font-bold mb-4">
 
         Add Facility
 
@@ -65,84 +51,39 @@ function AddFacility({ fetchFacilities }) {
         <input
           type="text"
           placeholder="Facility Name"
-
           value={name}
-
-          onChange={(e) =>
-            setName(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setName(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <input
           type="text"
           placeholder="Sport Type"
-
           value={sportType}
-
-          onChange={(e) =>
-            setSportType(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setSportType(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <input
           type="text"
           placeholder="Location"
-
           value={location}
-
-          onChange={(e) =>
-            setLocation(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setLocation(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <input
           type="number"
           placeholder="Price Per Slot"
-
           value={pricePerSlot}
-
-          onChange={(e) =>
-            setPricePerSlot(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setPricePerSlot(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <select
-
           value={slotType}
-
-          onChange={(e) =>
-            setSlotType(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setSlotType(e.target.value)}
+          className="border p-3 rounded-lg"
         >
 
           <option value="">
@@ -164,16 +105,8 @@ function AddFacility({ fetchFacilities }) {
         </select>
 
         <button
-
           onClick={handleAddFacility}
-
-          className="
-            bg-green-500
-            hover:bg-green-600
-            text-white
-            py-3
-            rounded-lg
-          "
+          className="bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg"
         >
 
           Add Facility

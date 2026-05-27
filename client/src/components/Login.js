@@ -1,41 +1,144 @@
-const handleLogin = async () => {
+import { useState } from 'react'
 
-  const response = await fetch(
-    `${process.env.REACT_APP_API_URL}/api/auth/login`,
-    {
-      method: 'POST',
+function AddSlot({
+  facilities,
+  fetchSlots
+}) {
 
-      headers: {
-        'Content-Type': 'application/json'
-      },
+  const [facility, setFacility] = useState('')
+  const [date, setDate] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
 
-      body: JSON.stringify({
-        email,
-        password
-      })
+  const handleAddSlot = async () => {
+
+    const selectedFacility =
+      facilities.find(
+        (f) => f._id === facility
+      )
+
+    let slotData = {
+      facility,
+      date,
+      startTime,
+      endTime
     }
-  )
 
-  const data = await response.json()
+    if (
+      selectedFacility.slotType === 'capacity'
+    ) {
 
-  if (data.token) {
+      slotData.totalCapacity =
+        selectedFacility.capacity
 
-    localStorage.setItem(
-      'token',
-      data.token
+    }
+
+    if (
+      selectedFacility.slotType === 'resource'
+    ) {
+
+      slotData.totalResources =
+        selectedFacility.totalResources
+
+    }
+
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/slots`,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type': 'application/json'
+        },
+
+        body: JSON.stringify(slotData)
+      }
     )
 
-    localStorage.setItem(
-      'user',
-      JSON.stringify(data.user)
-    )
+    await response.json()
 
-    setUser(data.user)
+    alert('Slot Added')
 
-  } else {
-
-    alert(data.message)
-
+    fetchSlots()
   }
 
+  return (
+
+    <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
+
+      <h2 className="text-2xl font-bold mb-4">
+
+        Add Slot
+
+      </h2>
+
+      <div className="grid gap-4">
+
+        <select
+          value={facility}
+          onChange={(e) => setFacility(e.target.value)}
+          className="border p-3 rounded-lg"
+        >
+
+          <option value="">
+            Select Facility
+          </option>
+
+          {
+
+            facilities.map((facility) => (
+
+              <option
+                key={facility._id}
+                value={facility._id}
+              >
+
+                {facility.name}
+
+              </option>
+
+            ))
+
+          }
+
+        </select>
+
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="border p-3 rounded-lg"
+        />
+
+        <input
+          type="text"
+          placeholder="Start Time"
+          value={startTime}
+          onChange={(e) => setStartTime(e.target.value)}
+          className="border p-3 rounded-lg"
+        />
+
+        <input
+          type="text"
+          placeholder="End Time"
+          value={endTime}
+          onChange={(e) => setEndTime(e.target.value)}
+          className="border p-3 rounded-lg"
+        />
+
+        <button
+          onClick={handleAddSlot}
+          className="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg"
+        >
+
+          Add Slot
+
+        </button>
+
+      </div>
+
+    </div>
+  )
 }
+
+export default AddSlot

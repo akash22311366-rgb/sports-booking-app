@@ -43,7 +43,7 @@ function AddSlot({
     }
 
     const response = await fetch(
-      'process.env.REACT_APP_API_URL/api/slots',
+      `${process.env.REACT_APP_API_URL}/api/slots`,
       {
         method: 'POST',
 
@@ -64,23 +64,9 @@ function AddSlot({
 
   return (
 
-    <div
-      className="
-        bg-white
-        p-6
-        rounded-2xl
-        shadow-lg
-        mb-8
-      "
-    >
+    <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
 
-      <h2
-        className="
-          text-2xl
-          font-bold
-          mb-4
-        "
-      >
+      <h2 className="text-2xl font-bold mb-4">
 
         Add Slot
 
@@ -89,18 +75,9 @@ function AddSlot({
       <div className="grid gap-4">
 
         <select
-
           value={facility}
-
-          onChange={(e) =>
-            setFacility(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setFacility(e.target.value)}
+          className="border p-3 rounded-lg"
         >
 
           <option value="">
@@ -128,65 +105,30 @@ function AddSlot({
 
         <input
           type="date"
-
           value={date}
-
-          onChange={(e) =>
-            setDate(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setDate(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <input
           type="text"
           placeholder="Start Time"
-
           value={startTime}
-
-          onChange={(e) =>
-            setStartTime(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setStartTime(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <input
           type="text"
           placeholder="End Time"
-
           value={endTime}
-
-          onChange={(e) =>
-            setEndTime(e.target.value)
-          }
-
-          className="
-            border
-            p-3
-            rounded-lg
-          "
+          onChange={(e) => setEndTime(e.target.value)}
+          className="border p-3 rounded-lg"
         />
 
         <button
-
           onClick={handleAddSlot}
-
-          className="
-            bg-purple-500
-            hover:bg-purple-600
-            text-white
-            py-3
-            rounded-lg
-          "
+          className="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg"
         >
 
           Add Slot

@@ -1,4 +1,8 @@
-import { useEffect, useState, useCallback } from 'react'
+import {
+  useEffect,
+  useState,
+  useCallback
+} from 'react'
 
 function MyBookings({ user }) {
 
@@ -67,7 +71,6 @@ function MyBookings({ user }) {
 
             <div
               key={booking._id}
-
               className="
                 border
                 rounded-xl
@@ -90,19 +93,11 @@ function MyBookings({ user }) {
 
               <p>
 
-                {
-
-                  booking.slot.startTime
-
-                }
+                {booking.slot.startTime}
 
                 -
 
-                {
-
-                  booking.slot.endTime
-
-                }
+                {booking.slot.endTime}
 
               </p>
 
