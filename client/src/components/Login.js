@@ -1,148 +1,41 @@
-import { useState } from 'react'
+const handleLogin = async () => {
 
-function Login({ setUser }) {
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/api/auth/login`,
+    {
+      method: 'POST',
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+      headers: {
+        'Content-Type': 'application/json'
+      },
 
-  const handleLogin = async () => {
+      body: JSON.stringify({
+        email,
+        password
+      })
+    }
+  )
 
-    const response = await fetch(
-      'process.env.REACT_APP_API_URL/api/auth/login',
-      {
-        method: 'POST',
+  const data = await response.json()
 
-        headers: {
-          'Content-Type': 'application/json'
-        },
+  if (data.token) {
 
-        body: JSON.stringify({
-          email,
-          password
-        })
-      }
+    localStorage.setItem(
+      'token',
+      data.token
     )
 
-    const data = await response.json()
+    localStorage.setItem(
+      'user',
+      JSON.stringify(data.user)
+    )
 
-    if (data.token) {
+    setUser(data.user)
 
-      localStorage.setItem(
-        'token',
-        data.token
-      )
+  } else {
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify(data.user)
-      )
-
-      setUser(data.user)
-
-    } else {
-
-      alert(data.message)
-
-    }
+    alert(data.message)
 
   }
 
-  return (
-
-    <div
-      className="
-        min-h-screen
-        flex
-        items-center
-        justify-center
-        bg-gray-100
-      "
-    >
-
-      <div
-        className="
-          bg-white
-          p-8
-          rounded-2xl
-          shadow-lg
-          w-96
-        "
-      >
-
-        <h1
-          className="
-            text-3xl
-            font-bold
-            mb-6
-            text-center
-            text-blue-600
-          "
-        >
-
-          Login
-
-        </h1>
-
-        <input
-          type="email"
-          placeholder="Email"
-
-          value={email}
-
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-
-          className="
-            w-full
-            border
-            p-3
-            rounded-lg
-            mb-4
-          "
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-
-          value={password}
-
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-
-          className="
-            w-full
-            border
-            p-3
-            rounded-lg
-            mb-4
-          "
-        />
-
-        <button
-
-          onClick={handleLogin}
-
-          className="
-            w-full
-            bg-blue-500
-            hover:bg-blue-600
-            text-white
-            py-3
-            rounded-lg
-          "
-        >
-
-          Login
-
-        </button>
-
-      </div>
-
-    </div>
-  )
 }
-
-export default Login
