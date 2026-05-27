@@ -1,49 +1,14 @@
 import { useState } from 'react'
 
-function AddSlot({
-  facilities,
-  fetchSlots
-}) {
+function Login({ setUser }) {
 
-  const [facility, setFacility] = useState('')
-  const [date, setDate] = useState('')
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const handleAddSlot = async () => {
-
-    const selectedFacility =
-      facilities.find(
-        (f) => f._id === facility
-      )
-
-    let slotData = {
-      facility,
-      date,
-      startTime,
-      endTime
-    }
-
-    if (
-      selectedFacility.slotType === 'capacity'
-    ) {
-
-      slotData.totalCapacity =
-        selectedFacility.capacity
-
-    }
-
-    if (
-      selectedFacility.slotType === 'resource'
-    ) {
-
-      slotData.totalResources =
-        selectedFacility.totalResources
-
-    }
+  const handleLogin = async () => {
 
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/slots`,
+      `${process.env.REACT_APP_API_URL}/api/auth/login`,
       {
         method: 'POST',
 
@@ -51,87 +16,124 @@ function AddSlot({
           'Content-Type': 'application/json'
         },
 
-        body: JSON.stringify(slotData)
+        body: JSON.stringify({
+          email,
+          password
+        })
       }
     )
 
-    await response.json()
+    const data = await response.json()
 
-    alert('Slot Added')
+    if (data.token) {
 
-    fetchSlots()
+      localStorage.setItem(
+        'token',
+        data.token
+      )
+
+      localStorage.setItem(
+        'user',
+        JSON.stringify(data.user)
+      )
+
+      setUser(data.user)
+
+    } else {
+
+      alert(data.message)
+    }
   }
 
   return (
 
-    <div className="bg-white p-6 rounded-2xl shadow-lg mb-8">
+    <div
+      className="
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        bg-gray-100
+      "
+    >
 
-      <h2 className="text-2xl font-bold mb-4">
+      <div
+        className="
+          bg-white
+          p-8
+          rounded-2xl
+          shadow-lg
+          w-96
+        "
+      >
 
-        Add Slot
-
-      </h2>
-
-      <div className="grid gap-4">
-
-        <select
-          value={facility}
-          onChange={(e) => setFacility(e.target.value)}
-          className="border p-3 rounded-lg"
+        <h1
+          className="
+            text-3xl
+            font-bold
+            mb-6
+            text-center
+            text-blue-600
+          "
         >
 
-          <option value="">
-            Select Facility
-          </option>
+          Login
 
-          {
+        </h1>
 
-            facilities.map((facility) => (
+        <input
+          type="email"
+          placeholder="Email"
 
-              <option
-                key={facility._id}
-                value={facility._id}
-              >
+          value={email}
 
-                {facility.name}
-
-              </option>
-
-            ))
-
+          onChange={(e) =>
+            setEmail(e.target.value)
           }
 
-        </select>
-
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="border p-3 rounded-lg"
+          className="
+            w-full
+            border
+            p-3
+            rounded-lg
+            mb-4
+          "
         />
 
         <input
-          type="text"
-          placeholder="Start Time"
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          className="border p-3 rounded-lg"
-        />
+          type="password"
+          placeholder="Password"
 
-        <input
-          type="text"
-          placeholder="End Time"
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          className="border p-3 rounded-lg"
+          value={password}
+
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+
+          className="
+            w-full
+            border
+            p-3
+            rounded-lg
+            mb-4
+          "
         />
 
         <button
-          onClick={handleAddSlot}
-          className="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg"
+
+          onClick={handleLogin}
+
+          className="
+            w-full
+            bg-blue-500
+            hover:bg-blue-600
+            text-white
+            py-3
+            rounded-lg
+          "
         >
 
-          Add Slot
+          Login
 
         </button>
 
@@ -141,4 +143,4 @@ function AddSlot({
   )
 }
 
-export default AddSlot
+export default Login
