@@ -21,7 +21,7 @@ function App() {
   const fetchFacilities = async () => {
 
     const response = await fetch(
-      'http://localhost:5000/api/facilities'
+      'process.env.REACT_APP_API_URL/api/facilities'
     )
 
     const data = await response.json()
@@ -32,7 +32,7 @@ function App() {
   const fetchSlots = async () => {
 
     const response = await fetch(
-      'http://localhost:5000/api/slots'
+      'process.env.REACT_APP_API_URL/api/slots'
     )
 
     const data = await response.json()
@@ -50,7 +50,7 @@ function App() {
   const handleBooking = async (slotId) => {
 
     const response = await fetch(
-      'http://localhost:5000/api/bookings',
+      'process.env.REACT_APP_API_URL/api/bookings',
       {
         method: 'POST',
 

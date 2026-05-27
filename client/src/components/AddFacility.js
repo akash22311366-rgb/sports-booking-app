@@ -11,7 +11,7 @@ function AddFacility({ fetchFacilities }) {
   const handleAddFacility = async () => {
 
     const response = await fetch(
-      'http://localhost:5000/api/facilities',
+      'process.env.REACT_APP_API_URL/api/facilities',
       {
         method: 'POST',
 
