@@ -1,33 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 function MyBookings({ user }) {
 
   const [bookings, setBookings] = useState([])
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
 
     const response = await fetch(
-      'http://localhost:5000/api/bookings'
+      `${process.env.REACT_APP_API_URL}/api/bookings`
     )
 
     const data = await response.json()
 
     const userBookings = data.filter(
-
       (booking) =>
-
         booking.userName === user.name
-
     )
 
     setBookings(userBookings)
-  }
+
+  }, [user.name])
 
   useEffect(() => {
 
     fetchBookings()
 
-  }, [])
+  }, [fetchBookings])
 
   return (
 

@@ -29,7 +29,7 @@ function AddFacility({ fetchFacilities }) {
       }
     )
 
-    const data = await response.json()
+    await response.json()
 
     alert('Facility Added')
 
