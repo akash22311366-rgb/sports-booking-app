@@ -1,27 +1,23 @@
 import { useEffect, useState } from 'react'
 
-import Login from './components/Login'
 import AddFacility from './components/AddFacility'
 import AddSlot from './components/AddSlot'
+import Login from './components/Login'
 import MyBookings from './components/MyBookings'
 
 function App() {
 
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem('user'))
+  )
+
   const [facilities, setFacilities] = useState([])
   const [slots, setSlots] = useState([])
-
-  const [user, setUser] = useState(
-
-    JSON.parse(
-      localStorage.getItem('user')
-    )
-
-  )
 
   const fetchFacilities = async () => {
 
     const response = await fetch(
-      '`${process.env.REACT_APP_API_URL}/api/facilities`'
+      `${process.env.REACT_APP_API_URL}/api/facilities`
     )
 
     const data = await response.json()
@@ -32,7 +28,7 @@ function App() {
   const fetchSlots = async () => {
 
     const response = await fetch(
-      '`${process.env.REACT_APP_API_URL}/api/facilities`'
+      `${process.env.REACT_APP_API_URL}/api/slots`
     )
 
     const data = await response.json()
@@ -40,17 +36,10 @@ function App() {
     setSlots(data)
   }
 
-  useEffect(() => {
-
-    fetchFacilities()
-    fetchSlots()
-
-  }, [])
-
   const handleBooking = async (slotId) => {
 
     const response = await fetch(
-      '`${process.env.REACT_APP_API_URL}/api/facilities`/api/bookings',
+      `${process.env.REACT_APP_API_URL}/api/bookings`,
       {
         method: 'POST',
 
@@ -60,301 +49,131 @@ function App() {
 
         body: JSON.stringify({
           slotId,
-          userName: user.name,
-          players: 1,
-          bookedResources: 1
+          userName: user.name
         })
       }
     )
 
     const data = await response.json()
 
-    alert(data.message || 'Booking Successful')
+    alert(data.message)
 
     fetchSlots()
   }
 
-  const handleLogout = () => {
+  useEffect(() => {
 
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    fetchFacilities()
+    fetchSlots()
 
-    setUser(null)
-  }
+  }, [])
 
   if (!user) {
 
     return <Login setUser={setUser} />
-
   }
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-8">
 
-      <div
+      <h1
         className="
-          flex
-          justify-between
-          items-center
+          text-4xl
+          font-bold
+          text-center
           mb-8
+          text-blue-600
         "
       >
 
-        <h1
-          className="
-            text-4xl
-            font-bold
-            text-blue-600
-          "
-        >
+        Sports Booking System
 
-          Sports Booking App
+      </h1>
 
-        </h1>
+      <AddFacility
+        fetchFacilities={fetchFacilities}
+      />
 
-        <div>
-
-          <span className="mr-4 font-semibold">
-
-            Welcome, {user.name}
-
-          </span>
-
-          <button
-
-            onClick={handleLogout}
-
-            className="
-              bg-red-500
-              hover:bg-red-600
-              text-white
-              px-4
-              py-2
-              rounded-lg
-            "
-          >
-
-            Logout
-
-          </button>
-
-        </div>
-
-      </div>
-
-      {
-
-        user.role === 'owner' && (
-
-          <>
-
-            <AddFacility
-              fetchFacilities={fetchFacilities}
-            />
-
-            <AddSlot
-              facilities={facilities}
-              fetchSlots={fetchSlots}
-            />
-
-          </>
-
-        )
-
-      }
+      <AddSlot
+        facilities={facilities}
+        fetchSlots={fetchSlots}
+      />
 
       <MyBookings user={user} />
 
       <div
         className="
-          grid
-          grid-cols-1
-          md:grid-cols-2
-          lg:grid-cols-3
-          gap-6
+          bg-white
+          p-6
+          rounded-2xl
+          shadow-lg
         "
       >
 
+        <h2
+          className="
+            text-2xl
+            font-bold
+            mb-4
+          "
+        >
+
+          Available Slots
+
+        </h2>
+
         {
 
-          facilities.map((facility) => (
+          slots.map((slot) => (
 
             <div
-              key={facility._id}
+              key={slot._id}
 
               className="
-                bg-white
-                rounded-2xl
-                shadow-lg
-                p-6
+                border
+                rounded-xl
+                p-4
+                mb-4
               "
             >
 
-              <h2 className="text-2xl font-bold mb-2">
+              <p className="font-bold">
 
-                {facility.name}
-
-              </h2>
-
-              <p className="text-gray-600 mb-1">
-
-                Sport: {facility.sportType}
+                {slot.facility?.name}
 
               </p>
 
-              <p className="text-gray-600 mb-1">
+              <p>{slot.date}</p>
 
-                Location: {facility.location}
+              <p>
 
-              </p>
-
-              <p className="text-green-600 font-bold mb-4">
-
-                ₹{facility.pricePerSlot}
+                {slot.startTime}
+                -
+                {slot.endTime}
 
               </p>
 
-              <h3 className="font-bold text-lg mb-3">
+              <button
 
-                Available Slots
+                onClick={() =>
+                  handleBooking(slot._id)
+                }
 
-              </h3>
+                className="
+                  mt-3
+                  bg-blue-500
+                  hover:bg-blue-600
+                  text-white
+                  px-4
+                  py-2
+                  rounded-lg
+                "
+              >
 
-              {
+                Book Slot
 
-                slots
-                .filter(
-                  (slot) =>
-                    slot.facility._id === facility._id
-                )
-                .map((slot) => (
-
-                  <div
-                    key={slot._id}
-
-                    className="
-                      border
-                      rounded-xl
-                      p-4
-                      mb-4
-                      bg-gray-50
-                    "
-                  >
-
-                    <p className="font-semibold">
-
-                      {slot.startTime} - {slot.endTime}
-
-                    </p>
-
-                    {
-
-                      facility.slotType === 'exclusive' && (
-
-                        <p className="mt-2">
-
-                          {
-
-                            slot.isBooked
-
-                            ? (
-                              <span className="text-red-500 font-bold">
-
-                                Booked
-
-                              </span>
-                            )
-
-                            : (
-                              <span className="text-green-500 font-bold">
-
-                                Available
-
-                              </span>
-                            )
-
-                          }
-
-                        </p>
-
-                      )
-
-                    }
-
-                    {
-
-                      facility.slotType === 'capacity' && (
-
-                        <p className="mt-2 text-blue-600 font-semibold">
-
-                          Remaining Spots:
-
-                          {
-
-                            slot.totalCapacity
-                            - slot.bookedCount
-
-                          }
-
-                          / {slot.totalCapacity}
-
-                        </p>
-
-                      )
-
-                    }
-
-                    {
-
-                      facility.slotType === 'resource' && (
-
-                        <p className="mt-2 text-purple-600 font-semibold">
-
-                          Remaining Tables:
-
-                          {
-
-                            slot.totalResources
-                            - slot.bookedResources
-
-                          }
-
-                          / {slot.totalResources}
-
-                        </p>
-
-                      )
-
-                    }
-
-                    <button
-
-                      onClick={() =>
-                        handleBooking(slot._id)
-                      }
-
-                      className="
-                        mt-4
-                        w-full
-                        bg-blue-500
-                        hover:bg-blue-600
-                        text-white
-                        py-2
-                        rounded-lg
-                        transition
-                      "
-                    >
-
-                      Book Now
-
-                    </button>
-
-                  </div>
-
-                ))
-
-              }
+              </button>
 
             </div>
 
