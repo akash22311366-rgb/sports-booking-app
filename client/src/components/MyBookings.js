@@ -10,13 +10,21 @@ function MyBookings() {
 
   const fetchBookings = useCallback(async () => {
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/bookings`
-    )
+    try {
 
-    const data = await response.json()
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/bookings`
+      )
 
-    setBookings(data)
+      const data = await response.json()
+
+      setBookings(data)
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
 
   }, [])
 
@@ -45,45 +53,59 @@ function MyBookings() {
           mb-4
         "
       >
+
         My Bookings
+
       </h2>
 
       {
+
         bookings.length === 0
-          ? (
-            <p>No bookings yet</p>
-          )
-          : (
-            bookings.map((booking) => (
 
-              <div
-                key={booking._id}
-                className="
-                  border
-                  rounded-xl
-                  p-4
-                  mb-4
-                "
-              >
+        ? (
 
-                <p className="font-bold">
-                  {booking.slot?.facility?.name}
-                </p>
+          <p>No bookings yet</p>
 
-                <p>
-                  {booking.slot?.date}
-                </p>
+        )
 
-                <p>
-                  {booking.slot?.startTime}
-                  -
-                  {booking.slot?.endTime}
-                </p>
+        : (
 
-              </div>
+          bookings.map((booking) => (
 
-            ))
-          )
+            <div
+              key={booking._id}
+              className="
+                border
+                rounded-xl
+                p-4
+                mb-4
+              "
+            >
+
+              <p className="font-bold">
+                {booking.slot?.facility?.name}
+              </p>
+
+              <p>
+                {booking.slot?.date}
+              </p>
+
+              <p>
+                {booking.slot?.startTime}
+                -
+                {booking.slot?.endTime}
+              </p>
+
+              <p>
+                User: {booking.userName}
+              </p>
+
+            </div>
+
+          ))
+
+        )
+
       }
 
     </div>
