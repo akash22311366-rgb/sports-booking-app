@@ -1,3 +1,10 @@
+const express = require('express')
+const router = express.Router()
+
+const Booking = require('../models/Booking')
+const Slot = require('../models/Slot')
+const Facility = require('../models/Facility')
+
 // CREATE BOOKING
 router.post('/', async (req, res) => {
 
@@ -39,7 +46,7 @@ router.post('/', async (req, res) => {
     if (facility.slotType === 'capacity') {
 
       if (
-        slot.bookedCount + players >
+        slot.bookedCount + (players || 0) >
         slot.totalCapacity
       ) {
         return res.status(400).json({
@@ -47,14 +54,14 @@ router.post('/', async (req, res) => {
         })
       }
 
-      slot.bookedCount += players
+      slot.bookedCount += (players || 0)
     }
 
     // RESOURCE
     if (facility.slotType === 'resource') {
 
       if (
-        slot.bookedResources + bookedResources >
+        slot.bookedResources + (bookedResources || 0) >
         slot.totalResources
       ) {
         return res.status(400).json({
@@ -62,7 +69,7 @@ router.post('/', async (req, res) => {
         })
       }
 
-      slot.bookedResources += bookedResources
+      slot.bookedResources += (bookedResources || 0)
     }
 
     await slot.save()
@@ -89,3 +96,30 @@ router.post('/', async (req, res) => {
   }
 
 })
+
+// GET BOOKINGS
+router.get('/', async (req, res) => {
+
+  try {
+
+    const bookings = await Booking.find()
+      .populate({
+        path: 'slot',
+        populate: {
+          path: 'facility'
+        }
+      })
+
+    res.json(bookings)
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    })
+
+  }
+
+})
+
+module.exports = router
