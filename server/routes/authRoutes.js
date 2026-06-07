@@ -15,7 +15,7 @@ router.post('/login', async (req, res) => {
 
     }
 
-    // TEMPORARY: plain text password check
+    // Plain text password check
     const isMatch = password === user.password
 
     if (!isMatch) {
