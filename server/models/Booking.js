@@ -9,7 +9,7 @@ const BookingSchema = new mongoose.Schema({
 
   userName: {
     type: String,
-    required: true
+    default: 'Guest'
   },
 
   players: {
